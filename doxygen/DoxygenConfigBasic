@@ -1,0 +1,6 @@
+PROJECT_NAME            = crypto
+
+INPUT                   =
+INCLUDE_PATH            = 
+
+@INCLUDE                = ../../designer/DoxygenConfigGeneric
