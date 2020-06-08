@@ -14,75 +14,82 @@
 #define XXH_INLINE_ALL
 #include "xxhash.h"
 
-void c_encrypt_aes_ecb_256(unsigned char * input, unsigned char * output, unsigned char * key, int size)
+namespace crypto::aes::ecb
 {
-    WORD key_schedule[60];
-    aes_key_setup((const BYTE *)key, key_schedule, 256);
 
-    if ((size % AES_BLOCK_SIZE) == 0)
+void encrypt(unsigned char * input, unsigned char * output, int size_data, unsigned char * key, int size_key)
+{
+    if (size_key != 128 || size_key != 192 || size_key != 256) return;
+    if ((size_data % AES_BLOCK_SIZE) != 0) return;
+
+    WORD key_schedule[60]; // odpowiednio 11, 13 i 15 wordow
+    aes_key_setup((const BYTE *)key, key_schedule, size_key);
+
+    auto blocks = size_data / AES_BLOCK_SIZE;
+
+    for (int i = 0; i < blocks; i++)
     {
-        auto blocks = size / AES_BLOCK_SIZE;
+        aes_encrypt((const BYTE *) input, (BYTE *) output, key_schedule, size_key);
 
-        for (int i = 0; i < blocks; i++)
-        {
-            aes_encrypt((const BYTE *) input, (BYTE *) output, key_schedule, 256);
-
-            input += AES_BLOCK_SIZE;
-            output += AES_BLOCK_SIZE;
-        }
+        input += AES_BLOCK_SIZE;
+        output += AES_BLOCK_SIZE;
     }
 }
 
-void c_decrypt_aes_ecb_256(unsigned char * input, unsigned char * output, unsigned char * key, int size)
+void decrypt(unsigned char * input, unsigned char * output, int size_data, unsigned char * key, int size_key)
 {
-    WORD key_schedule[60];
-    aes_key_setup((const BYTE *)key, key_schedule, 256);
+    if (size_key != 128 || size_key != 192 || size_key != 256) return;
+    if ((size_data % AES_BLOCK_SIZE) != 0) return;
 
-    if ((size % AES_BLOCK_SIZE) == 0)
+    WORD key_schedule[60]; // odpowiednio 11, 13 i 15 wordow
+    aes_key_setup((const BYTE *)key, key_schedule, size_key);
+
+    auto blocks = size_data / AES_BLOCK_SIZE;
+
+    for (int i = 0; i < blocks; i++)
     {
-        auto blocks = size / AES_BLOCK_SIZE;
+        aes_decrypt((const BYTE *) input, (BYTE *) output, key_schedule, size_key);
 
-        for (int i = 0; i < blocks; i++)
-        {
-            aes_decrypt((const BYTE *) input, (BYTE *) output, key_schedule, 256);
-
-            input += AES_BLOCK_SIZE;
-            output += AES_BLOCK_SIZE;
-        }
+        input += AES_BLOCK_SIZE;
+        output += AES_BLOCK_SIZE;
     }
 }
+
+}; /* namespace: crypto::aes::ecb */
+
+
 
 //---------------------------------------------| info |---------------------------------------------//
 
-void c_hash_sha_1(unsigned char * input, unsigned char * output, int size)
-{
-    if ((size % SHA1_BLOCK_SIZE) == 0)
-    {
-        SHA1_CTX ctx;
+// void c_hash_sha_1(unsigned char * input, unsigned char * output, int size)
+// {
+//     if ((size % SHA1_BLOCK_SIZE) == 0)
+//     {
+//         SHA1_CTX ctx;
 
-        sha1_init(&ctx);
-        sha1_update(&ctx, (const BYTE *) input, size);
-        sha1_final(&ctx, (BYTE *) output);
-    }
-}
+//         sha1_init(&ctx);
+//         sha1_update(&ctx, (const BYTE *) input, size);
+//         sha1_final(&ctx, (BYTE *) output);
+//     }
+// }
 
-void c_hash_sha_256(unsigned char * input, unsigned char * output, int size)
-{
-    if ((size % SHA256_BLOCK_SIZE) == 0)
-    {
-        SHA256_CTX ctx;
+// void c_hash_sha_256(unsigned char * input, unsigned char * output, int size)
+// {
+//     if ((size % SHA256_BLOCK_SIZE) == 0)
+//     {
+//         SHA256_CTX ctx;
 
-        sha256_init(&ctx);
-        sha256_update(&ctx, (const BYTE *) input, size);
-        sha256_final(&ctx, (BYTE *) output);
-    }
-}
+//         sha256_init(&ctx);
+//         sha256_update(&ctx, (const BYTE *) input, size);
+//         sha256_final(&ctx, (BYTE *) output);
+//     }
+// }
 
-unsigned int c_hash_xxhash_32(void * input, int size, unsigned int seed)
-{
-    XXH32_state_t state;
+// unsigned int c_hash_xxhash_32(void * input, int size, unsigned int seed)
+// {
+//     XXH32_state_t state;
 
-    XXH32_reset(&state, seed);
-    XXH32_update(&state, input, size);
-    return XXH32_digest(&state);
-}
+//     XXH32_reset(&state, seed);
+//     XXH32_update(&state, input, size);
+//     return XXH32_digest(&state);
+// }

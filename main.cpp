@@ -10,6 +10,7 @@
 
 int main()
 {
+    int k = 2;
 
     while(1);
 }
