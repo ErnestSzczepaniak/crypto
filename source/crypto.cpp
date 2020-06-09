@@ -19,10 +19,7 @@ namespace crypto::aes::ecb
 
 void encrypt(unsigned char * input, unsigned char * output, int size_data, unsigned char * key, int size_key)
 {
-    if (size_key != 128 || size_key != 192 || size_key != 256) return;
-    if ((size_data % AES_BLOCK_SIZE) != 0) return;
-
-    WORD key_schedule[60]; // odpowiednio 11, 13 i 15 wordow
+    WORD key_schedule[60];
     aes_key_setup((const BYTE *)key, key_schedule, size_key);
 
     auto blocks = size_data / AES_BLOCK_SIZE;
@@ -38,9 +35,6 @@ void encrypt(unsigned char * input, unsigned char * output, int size_data, unsig
 
 void decrypt(unsigned char * input, unsigned char * output, int size_data, unsigned char * key, int size_key)
 {
-    if (size_key != 128 || size_key != 192 || size_key != 256) return;
-    if ((size_data % AES_BLOCK_SIZE) != 0) return;
-
     WORD key_schedule[60]; // odpowiednio 11, 13 i 15 wordow
     aes_key_setup((const BYTE *)key, key_schedule, size_key);
 
@@ -57,6 +51,26 @@ void decrypt(unsigned char * input, unsigned char * output, int size_data, unsig
 
 }; /* namespace: crypto::aes::ecb */
 
+namespace crypto::aes::cbc
+{
+
+void encrypt(unsigned char * input, unsigned char * output, int size_data, unsigned char * key, int size_key, unsigned char * iv)
+{
+    WORD key_schedule[60];
+    aes_key_setup((const BYTE *)key, key_schedule, size_key);
+
+    aes_encrypt_cbc((const BYTE *) input, size_data, (BYTE *) output, key_schedule, size_key, (const BYTE *) iv);    
+}
+
+void decrypt(unsigned char * input, unsigned char * output, int size_data, unsigned char * key, int size_key, unsigned char * iv)
+{
+    WORD key_schedule[60];
+    aes_key_setup((const BYTE *)key, key_schedule, size_key);
+
+    aes_decrypt_cbc((const BYTE *) input, size_data, (BYTE *) output, key_schedule, size_key, (const BYTE *) iv); 
+}
+
+}; /* namespace: crypto::aes::cbc */
 
 
 //---------------------------------------------| info |---------------------------------------------//

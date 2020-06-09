@@ -19,6 +19,14 @@ void decrypt(unsigned char * input, unsigned char * output, int size_data, unsig
 
 }; /* namespace: crypto::aes::ecb */
 
+namespace crypto::aes::cbc
+{
+
+void encrypt(unsigned char * input, unsigned char * output, int size_data, unsigned char * key, int size_key, unsigned char * iv);
+void decrypt(unsigned char * input, unsigned char * output, int size_data, unsigned char * key, int size_key, unsigned char * iv);
+
+}; /* namespace: crypto::aes::cbc */
+
 
 void c_encrypt_aes_ecb_256(unsigned char * input, unsigned char * output, unsigned char * key, int size);
 void c_decrypt_aes_ecb_256(unsigned char * input, unsigned char * output, unsigned char * key, int size);
