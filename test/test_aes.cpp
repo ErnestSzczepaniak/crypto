@@ -29,10 +29,10 @@ TEST_CASE("aes256cbc")
 
     unsigned char decrypted[16];
 
-    for (int i = 0; i < 1024 * 1024; i++)
-    {
-        crypto::aes::cbc::decrypt(in, decrypted, 16, key, 256, iv);
-    }
+    // for (int i = 0; i < 1024 * 1024; i++)
+    // {
+    //     crypto::aes::cbc::decrypt(in, decrypted, 16, key, 256, iv);
+    // }
 }
 
 TEST_CASE("fast aes")
@@ -47,9 +47,9 @@ TEST_CASE("fast aes")
 
     AES_init_ctx_iv(&ctx, key, iv);
 
-    for (int i = 0; i < 1024 * 1024; i++)
-    {
-        AES_CBC_decrypt_buffer(&ctx, in, 16);
-    }
+    // for (int i = 0; i < 1024 * 1024; i++)
+    // {
+    //     AES_CBC_decrypt_buffer(&ctx, in, 16);
+    // }
     
 }
