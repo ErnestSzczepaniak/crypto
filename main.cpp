@@ -7,26 +7,50 @@
 #else
 
 #include "build.h"
-#include "aes.h"
+#include "faes.h"
+#include "string.h"
+#include "timer_private.h"
+#include "crypto.h"
 
-extern "C" void faes_key_schedule(unsigned char * input, unsigned char * output);
 
-#include <arm_neon.h>
+static constexpr auto blocks = 1024 * 100;
+unsigned char ciphertext[16 * blocks];
+
+void fast()
+{
+    faes_encrypt(nullptr, ciphertext, nullptr, sizeof(ciphertext));
+}
+
+void slow()
+{
+    crypto::aes::ecb::encrypt(nullptr, ciphertext, sizeof(ciphertext), nullptr, 256);
+}
+
+template<typename T>
+double measure(T function)
+{
+    timer_private.disable();
+    timer_private.load(0xffffffff);
+    timer_private.enable();
+
+    auto start = timer_private.counter();
+
+    function();
+
+    auto stop = timer_private.counter();
+    auto diff = start - stop;
+    auto period = (double)diff / 231e6;
+    auto speed = sizeof(ciphertext) / period;
+
+    return (speed / (1024 * 1024));
+}
 
 int main()
 {
-    unsigned char key[] = {
-        0x60, 0x3d, 0xeb, 0x10, 0x15, 0xca, 0x71, 0xbe, 
-        0x2b, 0x73, 0xae, 0xf0, 0x85, 0x7d, 0x77, 0x81, 
-        0x1f, 0x35, 0x2c, 0x07, 0x3b, 0x61, 0x08, 0xd7, 
-        0x2d, 0x98, 0x10, 0xa3, 0x09, 0x14, 0xdf, 0xf4
-    };
+    volatile auto f = measure(fast);
 
-    unsigned char expanded[240];
-    unsigned char expanded2[240];
+    volatile auto w = measure(slow);
 
-    faes_key_schedule(key, expanded);
-    aes_key_setup((BYTE *) key, (WORD *) expanded2, 256);
 
     while(1);
 }

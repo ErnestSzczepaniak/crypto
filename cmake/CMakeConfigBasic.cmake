@@ -8,8 +8,8 @@ set(version_major               1)
 set(version_minor               0)
 set(version_revision            0)
 
-option(dump ""                  off)
-option(image ""                 off)
+option(dump ""                  on)
+option(image ""                 on)
 option(documentation ""         off)
 
 # ---------------------------------------------| project |--------------------------------------------- #
@@ -19,7 +19,7 @@ set(name_library                crypto)
 set(name_executable             executable.elf)
 
 set(dependency_internal_common  )
-set(dependency_internal_target  )
+set(dependency_internal_target  core_a9)
 set(dependency_internal_host    )
 
 set(dependency_external_common  )
