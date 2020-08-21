@@ -11,9 +11,9 @@
 #include "string.h"
 #include "timer_private.h"
 #include "crypto.h"
+#include "alt_cache.h"
 
-
-static constexpr auto blocks = 1024 * 100;
+static constexpr auto blocks = 1024;
 unsigned char ciphertext[16 * blocks];
 
 void fast()
