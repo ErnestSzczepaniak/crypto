@@ -11,8 +11,8 @@ TEST_CASE("wee")
     unsigned char ciphertext[16];
     unsigned char decrypted[16];
 
-    // faes_expand(key, expanded_encrypt, expanded_decrypt);
+    faes_expand(key, expanded_encrypt, expanded_decrypt);
 
-    // faes_block_encrypt(plaintext, ciphertext, expanded_encrypt);
-    // faes_block_decrypt(ciphertext, decrypted, expanded_decrypt);
+    faes_block_encrypt(plaintext, ciphertext, expanded_encrypt);
+    faes_block_decrypt(ciphertext, decrypted, expanded_decrypt);
 }

@@ -22,7 +22,7 @@ set(public_option_target        )
 set(public_option_host          )
 
 set(private_option_common       )
-set(private_option_target       -Ofast)
+set(private_option_target       )
 set(private_option_host         )
 
 # ---------------------------------------------| include |--------------------------------------------- #

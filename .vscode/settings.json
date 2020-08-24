@@ -59,7 +59,10 @@
         "mutex": "cpp",
         "thread": "cpp",
         "condition_variable": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "shared_mutex": "cpp",
+        "cinttypes": "cpp",
+        "bit": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

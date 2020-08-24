@@ -1,5 +1,19 @@
 #include "faes.h"
 #include "faes_table.h"
+#include "string.h"
+
+void faes_block_copy(unsigned char * output, unsigned char * input)
+{
+    memcpy(output, input, 16);
+}
+
+void faes_block_xor(unsigned char * input1, unsigned char * input2, unsigned char * output)
+{
+    for (int i = 0; i < 16; i++)
+    {
+        output[i] = input1[i] ^ input2[i];
+    }
+}
 
 void faes_expand(unsigned char * input, unsigned int * encrypt, unsigned int * decrypt)
 {
@@ -160,7 +174,7 @@ void faes_block_decrypt(unsigned char * input, unsigned char * output, unsigned 
     }
 }
 
-void faes_encrypt(unsigned char * input, unsigned char * output, unsigned char * key, int size) 
+void faes_ecb_encrypt(unsigned char * input, unsigned char * output, unsigned char * key, int size) 
 {
     if (size % 16 != 0) return;
 
@@ -176,3 +190,60 @@ void faes_encrypt(unsigned char * input, unsigned char * output, unsigned char *
     }
 }
 
+void faes_ecb_decrypt(unsigned char * input, unsigned char * output, unsigned char * key, int size)
+{
+    if (size % 16 != 0) return;
+
+    auto blocks = size / 16;
+    unsigned int expanded_encrypt[60];
+    unsigned int expanded_decrypt[60];
+
+    faes_expand(key, expanded_encrypt, expanded_decrypt);
+
+    for (int i = 0; i < blocks; i++)
+    {
+        faes_block_decrypt(&input[i * 16], &output[i * 16], expanded_encrypt);
+    }
+}
+
+void faes_cbc_encrypt(unsigned char * input, unsigned char * output, unsigned char * key, int size, unsigned char * iv)
+{
+    if (size % 16 != 0) return;
+
+    auto blocks = size / 16;
+    unsigned int expanded_encrypt[60];
+    unsigned int expanded_decrypt[60];
+    unsigned char buffer[16];
+
+    faes_expand(key, expanded_encrypt, expanded_decrypt);
+
+    faes_block_copy(buffer, iv);
+
+    for (int i = 0; i < blocks; i++)
+    {
+        faes_block_xor(&input[i * 16], buffer, buffer);
+        faes_block_encrypt(buffer, &output[i * 16], expanded_encrypt);
+        faes_block_copy(buffer, &output[i * 16]);
+    }
+}
+
+void faes_cbc_decrypt(unsigned char * input, unsigned char * output, unsigned char * key, int size, unsigned char * iv)
+{
+    if (size % 16 != 0) return;
+
+    auto blocks = size / 16;
+    unsigned int expanded_encrypt[60];
+    unsigned int expanded_decrypt[60];
+    unsigned char buffer[16];
+
+    faes_expand(key, expanded_encrypt, expanded_decrypt);
+
+    faes_block_copy(buffer, iv);
+
+    for (int i = 0; i < blocks; i++)
+    {
+        faes_block_decrypt(&input[i * 16], &output[i * 16], expanded_decrypt);
+        faes_block_xor(&output[i * 16], buffer, &output[i * 16]);
+        faes_block_copy(buffer, &input[i * 16]);
+    }
+}

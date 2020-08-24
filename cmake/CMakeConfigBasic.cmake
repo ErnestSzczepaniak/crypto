@@ -1,6 +1,6 @@
 # ---------------------------------------------| config |--------------------------------------------- #
 
-set(platform                    target)
+set(platform                    host)
 
 set(type                        debug)
 
@@ -19,7 +19,7 @@ set(name_library                crypto)
 set(name_executable             executable.elf)
 
 set(dependency_internal_common  )
-set(dependency_internal_target  core_a9 family_c5)
+set(dependency_internal_target  )
 set(dependency_internal_host    )
 
 set(dependency_external_common  )
@@ -46,6 +46,6 @@ set(sdram_size_pool             512M)
 
 set(ocram_start                 0xffff0000)
 set(ocram_size                  64K)
-set(ocram_size_stack            48K)
+set(ocram_size_stack            24K)
 set(ocram_size_pool             4K)
 
