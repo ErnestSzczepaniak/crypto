@@ -1,5 +1,4 @@
 #include "test.h"
-#include "faes.h"
 #include "crypto.h"
 #include <fstream>
 #include "string.h"
@@ -41,10 +40,7 @@ TEST_CASE("pop")
     static constexpr auto size_bitstream = 2159408;
 
     unsigned char key[32] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f};
-    unsigned char iv[16] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
-
-    unsigned int expanded_encrypt[60];
-    unsigned int expanded_decrypt[60];
+    unsigned char iv[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
 
     unsigned char plaintext[size_bitstream];
     unsigned char ciphertext[size_bitstream];
@@ -58,17 +54,12 @@ TEST_CASE("pop")
 
     read(stream_plaintext, plaintext, size_bitstream);
 
-    faes_expand(key, expanded_encrypt, expanded_decrypt);
-
-    faes_cbc_encrypt(plaintext, ciphertext, key, sizeof(plaintext), iv);
-    faes_cbc_decrypt(ciphertext, decrypted, key, sizeof(plaintext), iv);
+    crypto::faes::cbc::encrypt(plaintext, ciphertext, sizeof(plaintext), key, iv);
+    crypto::faes::cbc::decrypt(ciphertext, decrypted, sizeof(plaintext), key, iv);
 
     auto res = memcmp(plaintext, decrypted, size_bitstream);
 
     REQUIRE(res == 0);
 
     write(stream_ciphertext, ciphertext, size_bitstream);
-
-    // crypto::aes::cbc::decrypt(plaintext, ciphertext, sizeof(plaintext), key, 256, iv);
-    //faes_cbc_decrypt(ciphertext, decrypted, expanded_decrypt);
 }

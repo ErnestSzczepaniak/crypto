@@ -1,4 +1,3 @@
-#include "faes.h"
 #include "faes_table.h"
 #include "string.h"
 
@@ -174,7 +173,10 @@ void faes_block_decrypt(unsigned char * input, unsigned char * output, unsigned 
     }
 }
 
-void faes_ecb_encrypt(unsigned char * input, unsigned char * output, unsigned char * key, int size) 
+namespace crypto::faes::ecb
+{
+
+void encrypt(unsigned char * input, unsigned char * output, int size, unsigned char * key) 
 {
     if (size % 16 != 0) return;
 
@@ -190,7 +192,7 @@ void faes_ecb_encrypt(unsigned char * input, unsigned char * output, unsigned ch
     }
 }
 
-void faes_ecb_decrypt(unsigned char * input, unsigned char * output, unsigned char * key, int size)
+void decrypt(unsigned char * input, unsigned char * output, int size, unsigned char * key)
 {
     if (size % 16 != 0) return;
 
@@ -206,7 +208,12 @@ void faes_ecb_decrypt(unsigned char * input, unsigned char * output, unsigned ch
     }
 }
 
-void faes_cbc_encrypt(unsigned char * input, unsigned char * output, unsigned char * key, int size, unsigned char * iv)
+}; /* namespace: crypto::faes::ecb */
+
+namespace crypto::faes::cbc
+{
+
+void encrypt(unsigned char * input, unsigned char * output, int size, unsigned char * key, unsigned char * iv)
 {
     if (size % 16 != 0) return;
 
@@ -227,7 +234,7 @@ void faes_cbc_encrypt(unsigned char * input, unsigned char * output, unsigned ch
     }
 }
 
-void faes_cbc_decrypt(unsigned char * input, unsigned char * output, unsigned char * key, int size, unsigned char * iv)
+void decrypt(unsigned char * input, unsigned char * output, int size, unsigned char * key, unsigned char * iv)
 {
     if (size % 16 != 0) return;
 
@@ -247,3 +254,5 @@ void faes_cbc_decrypt(unsigned char * input, unsigned char * output, unsigned ch
         faes_block_copy(buffer, &input[i * 16]);
     }
 }
+
+}; /* namespace: crypto::faes::cbc */

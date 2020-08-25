@@ -27,6 +27,22 @@ void decrypt(unsigned char * input, unsigned char * output, int size_data, unsig
 
 }; /* namespace: crypto::aes::cbc */
 
+namespace crypto::faes::ecb
+{
+
+void encrypt(unsigned char * input, unsigned char * output, int size, unsigned char * key);
+void decrypt(unsigned char * input, unsigned char * output, int size, unsigned char * key);
+
+}; /* namespace: crypto::faes::ecb */
+
+namespace crypto::faes::cbc
+{
+
+void encrypt(unsigned char * input, unsigned char * output, int size, unsigned char * key, unsigned char * iv);
+void decrypt(unsigned char * input, unsigned char * output, int size, unsigned char * key, unsigned char * iv);
+
+}; /* namespace: crypto::faes::cbc */
+
 
 void c_encrypt_aes_ecb_256(unsigned char * input, unsigned char * output, unsigned char * key, int size);
 void c_decrypt_aes_ecb_256(unsigned char * input, unsigned char * output, unsigned char * key, int size);

@@ -7,11 +7,7 @@
 #else
 
 #include "build.h"
-#include "faes.h"
-#include "string.h"
-#include "timer_private.h"
-#include "crypto.h"
-#include "alt_cache.h"
+
 
 // unsigned char ciphertext[1024 * 1024];
 
