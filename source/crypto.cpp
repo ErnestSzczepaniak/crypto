@@ -75,35 +75,38 @@ void decrypt(unsigned char * input, unsigned char * output, int size_data, unsig
 
 //---------------------------------------------| info |---------------------------------------------//
 
-// void c_hash_sha_1(unsigned char * input, unsigned char * output, int size)
-// {
-//     if ((size % SHA1_BLOCK_SIZE) == 0)
-//     {
-//         SHA1_CTX ctx;
+namespace crypto
+{
 
-//         sha1_init(&ctx);
-//         sha1_update(&ctx, (const BYTE *) input, size);
-//         sha1_final(&ctx, (BYTE *) output);
-//     }
-// }
+void sha_1(unsigned char * input, unsigned char * output, int size)
+{
+    // if ((size % SHA1_BLOCK_SIZE) != 0) return;
 
-// void c_hash_sha_256(unsigned char * input, unsigned char * output, int size)
-// {
-//     if ((size % SHA256_BLOCK_SIZE) == 0)
-//     {
-//         SHA256_CTX ctx;
+    SHA1_CTX ctx;
 
-//         sha256_init(&ctx);
-//         sha256_update(&ctx, (const BYTE *) input, size);
-//         sha256_final(&ctx, (BYTE *) output);
-//     }
-// }
+    sha1_init(&ctx);
+    sha1_update(&ctx, (const BYTE *) input, size);
+    sha1_final(&ctx, (BYTE *) output);
+}
 
-// unsigned int c_hash_xxhash_32(void * input, int size, unsigned int seed)
-// {
-//     XXH32_state_t state;
+void sha_256(unsigned char * input, unsigned char * output, int size)
+{
+    // if ((size % SHA256_BLOCK_SIZE) != 0) return;
 
-//     XXH32_reset(&state, seed);
-//     XXH32_update(&state, input, size);
-//     return XXH32_digest(&state);
-// }
+    SHA256_CTX ctx;
+
+    sha256_init(&ctx);
+    sha256_update(&ctx, (const BYTE *) input, size);
+    sha256_final(&ctx, (BYTE *) output);
+}
+
+unsigned int xxhash_32(void * input, int size, unsigned int seed)
+{
+    XXH32_state_t state;
+
+    XXH32_reset(&state, seed);
+    XXH32_update(&state, (void *) input, size);
+    return XXH32_digest(&state);
+}
+
+}; /* namespace: crypto */

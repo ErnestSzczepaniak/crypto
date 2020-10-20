@@ -43,14 +43,13 @@ void decrypt(unsigned char * input, unsigned char * output, int size, unsigned c
 
 }; /* namespace: crypto::faes::cbc */
 
+namespace crypto
+{
 
-void c_encrypt_aes_ecb_256(unsigned char * input, unsigned char * output, unsigned char * key, int size);
-void c_decrypt_aes_ecb_256(unsigned char * input, unsigned char * output, unsigned char * key, int size);
+void sha_1(unsigned char * input, unsigned char * output, int size);
+void sha_256(unsigned char * input, unsigned char * output, int size);
+unsigned int xxhash(unsigned char * input, int size, unsigned int seed = 0);
 
-void c_hash_sha_1(unsigned char * input, unsigned char * output, int size);
-void c_hash_sha_256(unsigned char * input, unsigned char * output, int size);
-
-unsigned int c_hash_xxhash_32(void * input, int size, unsigned int seed = 0);
-
+}; /* namespace: crypto */
 
 #endif /* define: crypto_h */
